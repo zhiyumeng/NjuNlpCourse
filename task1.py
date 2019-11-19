@@ -13,7 +13,7 @@ IRR_DIC_PATH = 'data/irregular.txt'
 
 def load_dict(path=DIC_PATH):
     """加载单词词典"""
-    with open(DIC_PATH, 'r', encoding='ansi', errors='replace') as f:
+    with open(DIC_PATH, 'r', encoding='gbk', errors='replace') as f:
         lines = f.readlines()
     dict = {}
     for line in lines:
@@ -23,11 +23,8 @@ def load_dict(path=DIC_PATH):
         dict[word] = attribute
     return dict
 
-
+#定义动词还原的规则
 verb_patterns = {
-    """
-    定义动词还原的规则
-    """
     r's$': [''],  # *s -> * (SINGULAR3)
     r'es$': [''],  # *es -> * (SINGULAR3)
     r'ies$': ['y'],  # *ies -> *y (SINGULAR3)
@@ -53,11 +50,13 @@ def lemmatizationViaPatterns(patterns, word):
                 new_word = re.sub(pattern, repl, word)
                 print(word, '->', new_word)
                 yield new_word
+        # else:
+        #     print(word,' doesn\'t match ',pattern)
 
 
 def loadIrregularVerbs(path='data/irregular.txt'):
     """加载不规则动词词典"""
-    with open(path, 'r') as f:
+    with open(path, 'r',encoding='utf-8') as f:
         lines = f.readlines()
     irregular_dict = {}
     for line in lines:
@@ -95,11 +94,14 @@ def checkWord(dict, irregular_dict, word):
     if word in dict:
         print(word, dict[word])
         return True
-    # 词语的动词原形是否在词典中
+
+    # 根据语法规则还原后的词语是否在词典中
     for newword in lemmatizationViaPatterns(verb_patterns, word):
         if newword in dict:
             print(newword, dict[newword])
             return True
+
+    #根据不规则动词表还原后的词语是否在词典中
     init_verb = ProcessIrregularVerb(irregular_dict, word)
     if init_verb and init_verb in dict:
         print(init_verb, dict[init_verb])

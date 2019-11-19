@@ -11,7 +11,7 @@ def load_dict(path):
     :param path:
     :return:
     """
-    with open(path, 'r') as f:
+    with open(path, 'r',encoding='gbk') as f:
         lines = f.readlines()
     words = [l.split(',')[0] for l in lines]
     return words
@@ -66,7 +66,7 @@ def RMM(dict, text, max_len=5):
 
 if __name__ == '__main__':
     words = load_dict(path=DIC_PATH)
-    text = '幼儿园地节目'
+    text = '幼儿园地节目给我们带来了快乐'
     print('FMM:', FMM(words, text))
     print("RMM:", RMM(words, text))
 
